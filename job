@@ -1,0 +1,2 @@
+./test 0.001 1000 10000 10.0 28.0 2.6666666666
+#lyapunov h Nstep Niters ss rr bb

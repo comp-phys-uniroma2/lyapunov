@@ -1,0 +1,8 @@
+functions.o: precision.o
+gram_schmidt.o: precision.o
+lyapunov.o: precision.o
+lyapunov.o: functions.o
+lyapunov.o: solvers.o
+lyapunov.o: gram_schmidt.o
+solvers.o: precision.o
+solvers.o: precision.o
