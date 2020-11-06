@@ -62,23 +62,25 @@ program lyapunov
    u = unext
  end do
 
-    do k = 1, Niters ! numero di iterazioni tra una call di gs e l'altra 
-        !print*,"iter:",k
-        VA=VO
-        ! Propago per un po' di step
-        do i = 1, Nstep
-            call dopri54(lorenz, t, h, u, unext, abserr)
-            u = unext
-            !print*,t,y,abserr
-            u1=u(1)
-            u2=u(2)
-            u3=u(3)
-            call dopri54(lorenz_linear, t, h, VA(:,1), VA(:,1), abserr)
-            call dopri54(lorenz_linear, t, h, VA(:,2), VA(:,2), abserr)
-            call dopri54(lorenz_linear, t, h, VA(:,3), VA(:,3), abserr)
-            t = t + h
-        enddo
+ do k = 1, Niters ! numero di iterazioni tra una call di gs e l'altra 
+    !print*,"iter:",k
+    VA=VO
+    ! Propago per un po' di step
+    do i = 1, Nstep
+       call dopri54(lorenz, t, h, u, unext, abserr)
+       u = unext
+       !print*,t,y,abserr
+       u1=u(1)
+       u2=u(2)
+       u3=u(3)
+       call dopri54(lorenz_linear, t, h, VA(:,1), VA(:,1), abserr)
+       call dopri54(lorenz_linear, t, h, VA(:,2), VA(:,2), abserr)
+       call dopri54(lorenz_linear, t, h, VA(:,3), VA(:,3), abserr)
+       t = t + h
+    enddo
+    
     call gs(VA,VO,lambda)
+    
     tfin = tfin + Nstep*h
     if (any(lambda<0)) then
         stop 'lambda<0: reduce Nstep'
@@ -88,7 +90,8 @@ program lyapunov
         cum = cum + log(lambda)
     end if
     write(194,*) tfin, cum/tfin
-    enddo  
+
+ enddo
 
  close(194)
 
@@ -109,7 +112,8 @@ program lyapunov
  print*, lambda(1)
  print*, lambda(2)
  print*, lambda(3)
- print*, "D_kap_yor=", 2.d0+(lambda(3)+lambda(3))/abs(lambda(1))
+ print*, sum(lambda), -ss-bb-1
+ print*, "D_kap_yor=", 2.d0+(lambda(3)+lambda(2))/abs(lambda(1))
   
  close(194)
 
